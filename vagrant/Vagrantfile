@@ -4,6 +4,7 @@ Vagrant.configure(2) do |config|
   config.hostmanager.include_offline = true
 
   config.vm.define "puppet" do |puppet|
+    # Puppet server
     config.vm.provider "virtualbox" do |v|
       v.memory = 2048
     end
@@ -14,37 +15,36 @@ Vagrant.configure(2) do |config|
     puppet.vm.synced_folder ".", "/vagrant"
     puppet.vm.synced_folder "../code", "/puppet_code"
     puppet.vm.synced_folder "../puppetserver", "/puppet_puppetserver", owner: puppet, group: puppet
-    puppet.vm.provision "shell", inline: <<~SHELL
-      sudo yum update -y
-      # Install puppetserver
-      sudo rpm -ivh https://yum.puppetlabs.com/puppet5/puppet5-release-el-7.noarch.rpm
-      sudo yum install puppetserver -y
-      Map puppet code and server config to local folders
-      sudo rm -rf /etc/puppetlabs/code
-      sudo ln -s /puppet_code /etc/puppetlabs/code
-      sudo rm -rf /etc/puppetlabs/puppetserver
-      sudo ln -s /puppet_puppetserver /etc/puppetlabs/puppetserver
-      # Configure autosigning
-      echo "*.example.com" | sudo tee /etc/puppetlabs/puppet/autosign.conf
-      # Reduce puppetserver JVM size to 512Mb
-      sudo sed -i 's/2g/512m/g' /etc/sysconfig/puppetserver
-      # Start puppetserver service
-      sudo service puppetserver start
-    SHELL
+    puppet.vm.provision "shell", path: "install_puppetserver_centos.sh"
   end
 
   config.vm.define "centos" do |centos|
+    # Centos Puppet agent
     centos.vm.box = "centos/7"
     centos.vm.hostname = "centos.example.com"
     centos.vm.network :private_network, ip: "10.0.0.11"
     centos.hostmanager.aliases = %w(centos)
+    centos.vm.provision "shell", path: "install_puppetagent_centos.sh"
   end
 
   config.vm.define "debian" do |debian|
+    # Debian Puppet agent
     debian.vm.box = "debian/jessie64"
     debian.vm.hostname = "debian.example.com"
     debian.vm.network :private_network, ip: "10.0.0.12"
     debian.hostmanager.aliases = %w(debian)
+    debian.vm.provision "shell", path: "install_puppetagent_debian.sh"
+  end
+
+  config.vm.define "windows" do |windows|
+    # Windows 2012 Puppet agent
+    windows.vm.box = "mwrock/Windows2016"
+    windows.vm.hostname = "agent3"
+    windows.vm.network :private_network, ip: "10.0.20.13"
+    windows.hostmanager.aliases = %w(windows)
+    windows.vm.provision "shell", 
+      path: "install_puppetagent_windows.ps1",
+      args: "--HostName windows"
   end
 
 end
