@@ -1,0 +1,50 @@
+Vagrant.configure(2) do |config|
+  config.hostmanager.enabled = true
+  config.hostmanager.ignore_private_ip = false
+  config.hostmanager.include_offline = true
+
+  config.vm.define "puppet" do |puppet|
+    # Puppet server
+    config.vm.provider "virtualbox" do |v|
+      v.memory = 2048
+    end
+    puppet.vm.box  = "bento/centos-7.5"
+    puppet.vm.hostname = "puppet.example.com"
+    puppet.vm.network :private_network, ip: "10.0.0.10"
+    puppet.hostmanager.aliases = %w(puppet)
+    puppet.vm.synced_folder ".", "/vagrant"
+    puppet.vm.synced_folder "../code", "/puppet_code"
+    puppet.vm.synced_folder "../puppetserver", "/puppet_puppetserver", owner: puppet, group: puppet
+    puppet.vm.provision "shell", path: "install_puppetserver_centos.sh"
+  end
+
+  config.vm.define "centos" do |centos|
+    # Centos Puppet agent
+    centos.vm.box = "bento/centos-7.5"
+    centos.vm.hostname = "centos.example.com"
+    centos.vm.network :private_network, ip: "10.0.0.11"
+    centos.hostmanager.aliases = %w(centos)
+    centos.vm.provision "shell", path: "install_puppetagent_centos.sh"
+  end
+
+  config.vm.define "debian" do |debian|
+    # Debian Puppet agent
+    debian.vm.box = "debian/jessie64"
+    debian.vm.hostname = "debian.example.com"
+    debian.vm.network :private_network, ip: "10.0.0.12"
+    debian.hostmanager.aliases = %w(debian)
+    debian.vm.provision "shell", path: "install_puppetagent_debian.sh"
+  end
+
+  config.vm.define "windows" do |windows|
+    # Windows 2012 Puppet agent
+    windows.vm.box = "mwrock/Windows2016"
+    windows.vm.hostname = "windows"
+    windows.vm.network :private_network, ip: "10.0.20.13"
+    windows.hostmanager.aliases = %w(windows)
+    windows.vm.provision "shell", 
+      path: "install_puppetagent_windows.ps1",
+      args: "--HostName windows"
+  end
+
+end
