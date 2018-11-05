@@ -8,7 +8,7 @@ Vagrant.configure(2) do |config|
     config.vm.provider "virtualbox" do |v|
       v.memory = 2048
     end
-    puppet.vm.box  = "generic/centos7"
+    puppet.vm.box  = "bento/centos-7.5"
     puppet.vm.hostname = "puppet.example.com"
     puppet.vm.network :private_network, ip: "10.0.0.10"
     puppet.hostmanager.aliases = %w(puppet)
@@ -20,7 +20,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.define "centos" do |centos|
     # Centos Puppet agent
-    centos.vm.box = "centos/7"
+    centos.vm.box = "bento/centos-7.5"
     centos.vm.hostname = "centos.example.com"
     centos.vm.network :private_network, ip: "10.0.0.11"
     centos.hostmanager.aliases = %w(centos)
