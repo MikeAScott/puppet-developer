@@ -4,17 +4,13 @@
 # Vagrant
 choco install -y virtualbox
 choco install -y vagrant
-vagrant plugin install vagrant-hostmanager
+C:\HashiCorp\Vagrant\bin\vagrant plugin install vagrant-hostmanager
 
 # Atom editor
+choco install -y ruby
+C:\tools\ruby25\bin\gem install puppet-lint
 choco install -y atom
-apm install language-puppet
-gem install puppet-lint
-apm install intentions
-apm install busy-signal
-apm install linter
-apm install linter-ui-default
-apm install linter-puppet-lint
+~\AppData\Local\atom\bin\apm install --packages-file atom_packages
 
 # Cmder
 choco install -y cmder
