@@ -1,0 +1,36 @@
+# /Users/mike.scott/.config/tmuxinator/puppet-dev.yml
+
+name: puppet-dev
+root: ~/dev/projects/learning/puppet-developer
+
+startup_window: puppet
+
+windows:
+  - puppet:
+      layout: main-vertical
+      panes:
+        - code:
+          - echo '**** Ctrl-b d to exit ****'
+          - cd .
+          - atom .
+        - puppetmaster:
+          - cd vagrant
+          - vagrant up puppet
+          - vagrant ssh puppet
+          - sudo -i
+  - agents:
+      layout: main-vertical
+      panes:
+        - centos:
+          - cd vagrant
+          - vagrant up centos
+          - vagrant ssh centos
+          - sudo -i
+        - debian:
+          - cd vagrant
+          - vagrant up debian
+          - vagrant ssh debian
+          - sudo -i
+        - windows:
+          - cd vagrant
+          - vagrant up windows

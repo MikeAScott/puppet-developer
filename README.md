@@ -1,2 +1,2 @@
 # puppet-developer
-Puppet developer learning excercises
+Puppet developer learning exercises
