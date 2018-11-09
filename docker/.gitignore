@@ -1,0 +1,5 @@
+keys/
+.ssh/
+code/modules/*
+code/hiera.yaml
+code/data/keyvault.conf
