@@ -7,7 +7,7 @@ usage () {
     '\n  start       Start puppet-server docker container' \
     '\n  attach      Attach to puppet-server docker container with bash shell' \
     '\n  stop        Stop the puppet-server. N.B. this removes the container and data' \
-    '\n  --help      Print usage'    
+    '\n  --help      Print usage'
 }
 
 createkeys () {
@@ -22,15 +22,16 @@ build () {
 
 start () {
   echo 'Starting puppet-server named puppet'
-  rm -r code/modules/*
+#  rm -r code/modules/*
   docker run --name puppet \
     --hostname puppet \
     -d --rm \
     -v $PWD/code:/etc/puppetlabs/code/environments/production \
-    # -v $PWD/.ssh:/root/.ssh \
     -v $PWD/keys:/etc/puppetlabs/puppet/eyaml \
     -p 8140:8140 \
     puppet-server
+
+  #docker exec puppet service puppetserver start
 
   echo -e \
     '\n  -------------------------------------------------' \

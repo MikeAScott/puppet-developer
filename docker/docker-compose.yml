@@ -1,0 +1,22 @@
+version: '3.5'
+services:
+  puppet:
+    build: ./puppet
+    # command: service puppetserver start
+    ports:
+      - "8140:8140"
+    volumes:
+      - $PWD/../code:/etc/puppetlabs/code/environments/production
+      - $PWD/../keys:/etc/puppetlabs/puppet/eyaml
+    container_name: puppet
+    hostname: puppet
+  centos:
+    build: ./centos
+    cap_add:
+      - SYS_ADMIN
+    container_name: centos
+    hostname: centos
+
+volumes:
+  redis_data:
+    driver: local
